@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { scan } from 'rxjs/operators';
+import { scan, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -8,15 +8,17 @@ import { scan } from 'rxjs/operators';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  source = of(1, 2, 3);
-  private observable = Observable.create();
-
   ngOnInit(): void {
-  }
+    const source = of(1, 2, 3);
 
-  clicked(event: Event) {
-    this.source.pipe(
-      scan((acc, curr) => acc * curr)
-    ).subscribe(console.log);
+    source.pipe(scan(console.log)).subscribe();
+
+
+    source.pipe(scan(console.log)).subscribe();
+
+    source.pipe(filter(item => {
+      console.log(`Item: ${item} - item !== 2 ${item !== 2}`);
+      return item !== 2;
+    })).subscribe();
   }
 }
